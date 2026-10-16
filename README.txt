@@ -8,7 +8,8 @@ PUBLICATION PACKAGE
 README.md is the GitHub landing page and includes the paper link, citation
 information, licence and automatic build instructions. CITATION.cff and
 CITATION.bib describe version 0.2.0. The project is licensed under Apache-2.0;
-see LICENSE and NOTICE.
+see LICENSE and NOTICE. Zenodo archives each release: doi:10.5281/zenodo.23410171
+resolves to the latest version, and doi:10.5281/zenodo.23410172 is version 0.2.0.
 
 START HERE
 

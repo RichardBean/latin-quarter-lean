@@ -2,6 +2,7 @@
 
 [![Lean proof check](https://github.com/RichardBean/latin-quarter-lean/actions/workflows/lean.yml/badge.svg)](https://github.com/RichardBean/latin-quarter-lean/actions/workflows/lean.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23410171.svg)](https://doi.org/10.5281/zenodo.23410171)
 
 For every positive integer $n$, this project proves
 
@@ -155,13 +156,15 @@ machine-readable software metadata for GitHub's **Cite this repository** menu.
 [CITATION.bib](CITATION.bib) supplies BibTeX entries for the software and paper.
 
 > Richard Bean (2026). *The smallest critical set in a Latin square: Lean 4
-> formalization*, version 0.2.0. https://github.com/RichardBean/latin-quarter-lean
+> formalization*, version 0.2.0. Zenodo. https://doi.org/10.5281/zenodo.23410172
 
 > Richard Bean (2026). *A counting proof for the smallest critical set in a
 > Latin square*. arXiv:2610.18199. https://arxiv.org/abs/2610.18199
 
-The paper's arXiv identifier refers to the manuscript. No separate software DOI
-has been assigned in this package.
+The paper's arXiv identifier refers to the manuscript. Zenodo archives each
+release of this repository: https://doi.org/10.5281/zenodo.23410171 always
+resolves to the latest version, and https://doi.org/10.5281/zenodo.23410172 is
+version 0.2.0.
 
 ## Provenance
 

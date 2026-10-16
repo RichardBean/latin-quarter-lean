@@ -8,6 +8,14 @@ authors:
   - family-names: Bean
     given-names: Richard
 version: 0.2.0
+doi: 10.5281/zenodo.23410171
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23410171
+    description: Zenodo concept DOI, which resolves to the latest version
+  - type: doi
+    value: 10.5281/zenodo.23410172
+    description: Zenodo DOI of version 0.2.0
 date-released: "2026-10-16"
 repository-code: "https://github.com/RichardBean/latin-quarter-lean"
 url: "https://github.com/RichardBean/latin-quarter-lean"
