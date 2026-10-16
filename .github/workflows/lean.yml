@@ -15,20 +15,20 @@ concurrency:
 jobs:
   build:
     name: Build and audit the proof
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
     env:
       LEAN_NUM_THREADS: "2"
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check standalone source matches the modules
         run: |
           python3 make_standalone.py
           git diff --exit-code -- LatinQuarterStandalone.lean
 
-      - name: Install Lean and build all proof targets
+      - name: Install Lean, build all proof targets, and replay them through the kernel
         uses: leanprover/lean-action@v1
         with:
           auto-config: "false"
@@ -38,9 +38,46 @@ jobs:
           lint: "false"
           use-mathlib-cache: "true"
           use-github-cache: "false"
+          leanchecker: "true"
+          leanchecker-args: "LatinQuarter LatinQuarterStandalone"
 
       - name: Check theorem statements and axiom lists
         run: lake env lean -DwarningAsError=true Audit.lean
 
       - name: Check the complete standalone proof from source
         run: lake env lean -DwarningAsError=true LatinQuarterStandalone.lean
+
+      - name: Check the main theorems with nanoda, an independent type checker
+        env:
+          # nanoda_lib master of 15 October 2026, which reads lean4export's JSON format
+          NANODA_COMMIT: f67473ba5f9397266f89c7852082c9c914b5d219
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/nanoda-check"
+          mkdir -p "$work"
+          lean_version="$(cut -d: -f2 lean-toolchain)"
+          git -c advice.detachedHead=false clone --quiet --depth 1 --branch "$lean_version" \
+            https://github.com/leanprover/lean4export "$work/lean4export"
+          (cd "$work/lean4export" && lake build)
+          git clone --quiet https://github.com/ammkrn/nanoda_lib "$work/nanoda_lib"
+          git -C "$work/nanoda_lib" -c advice.detachedHead=false checkout --quiet "$NANODA_COMMIT"
+          cargo build --release --manifest-path "$work/nanoda_lib/Cargo.toml"
+          lake env "$work/lean4export/.lake/build/bin/lean4export" LatinQuarter -- \
+            LatinQuarter.defining_set_lower_bound LatinQuarter.quarter_bound \
+            LatinQuarter.scs_eq_quarter LatinQuarter.cyclic_scs_eq_quarter \
+            LatinQuarter.completions_card_even LatinQuarter.Textbook.completions_even \
+            LatinQuarter.Textbook.definingSet_card LatinQuarter.Textbook.scs_eq_quarter \
+            > "$work/export.ndjson"
+          echo "Export: $(wc -l < "$work/export.ndjson") lines"
+          cat > "$work/config.json" <<EOF
+          {
+            "export_file_path": "$work/export.ndjson",
+            "use_stdin": false,
+            "permitted_axioms": ["propext", "Classical.choice", "Quot.sound"],
+            "unpermitted_axiom_hard_error": true,
+            "nat_extension": true,
+            "string_extension": true,
+            "print_success_message": true
+          }
+          EOF
+          "$work/nanoda_lib/target/release/nanoda_bin" "$work/config.json"
