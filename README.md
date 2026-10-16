@@ -1,4 +1,4 @@
-# The smallest critical set in a Latin square — Lean 4 formalization
+# The smallest critical set in a Latin square: Lean 4 formalization
 
 [![Lean proof check](https://github.com/RichardBean/latin-quarter-lean/actions/workflows/lean.yml/badge.svg)](https://github.com/RichardBean/latin-quarter-lean/actions/workflows/lean.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
