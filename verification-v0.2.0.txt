@@ -1,0 +1,71 @@
+VERIFICATION RECORD, VERSION 0.2.0
+Checks run by Claude at Richard Bean's request, 16 October 2026 (Australia/Sydney).
+Local platform: macOS arm64. The GitHub workflow repeats the build and the
+kernel and nanoda checks on every push.
+
+ENVIRONMENT
+
+  Lean:          leanprover/lean4:v4.24.0, installed with elan 4.2.4
+  Mathlib:       f897ebcf72cd16f89ab4577d0c826cd14afaafc7, fresh clone, clean
+                 working tree, compiled files from the official mathlib cache
+  lean4checker:  tag v4.24.0 (da26eb05e9959402afcb9bd6dfe5dc4f700f70d6)
+  lean4export:   tag v4.24.0 (f7f95b22c1bff79cfbec7f32c13ced73a1b4fdcd)
+  nanoda_lib:    master f67473ba5f9397266f89c7852082c9c914b5d219 (version 0.4.24)
+
+BUILD AND AUDIT
+
+$ python3 make_standalone.py
+  Regenerated LatinQuarterStandalone.lean from the 15 modules.
+
+$ lake build --wfail
+  Build completed successfully (7371 jobs). No warnings.
+
+$ lake env lean -DwarningAsError=true Audit.lean
+  Exit status 0. The #guard_msgs axiom checks pass for all ten audited results,
+  including LatinQuarter.completions_card_even and the three theorems of
+  LatinQuarter.Textbook.
+
+$ lake env lean -DwarningAsError=true LatinQuarterStandalone.lean
+  Exit status 0.
+
+AXIOMS OF EVERY DECLARATION
+
+A separate Lean script, not part of the package, listed every constant defined
+in a project module and the axioms it depends on:
+  171 constants (171 also in LatinQuarterStandalone); none depends on any axiom
+  other than propext, Classical.choice and Quot.sound; the project declares no
+  axioms; every constant is in namespace LatinQuarter.
+
+KERNEL REPLAY (lean4checker)
+
+lean4checker re-adds every declaration of a module to a fresh environment
+through Lean's kernel. Exit status 0 for each of: the 15 modules
+LatinQuarter.Basic through LatinQuarter.Textbook, LatinQuarterStandalone and
+Audit, run one at a time. A run over all LatinQuarter modules at once with
+LEAN_NUM_THREADS=2, as in the workflow, also passed (31 s, peak memory 7.4 GB).
+Control: lean4checker rejects its own deliberately corrupted test module
+Lean4CheckerTests.ReplaceAxiom.
+
+INDEPENDENT TYPE CHECKER (nanoda)
+
+lean4export wrote the eight main theorems and everything they depend on
+(LatinQuarter.defining_set_lower_bound, quarter_bound, scs_eq_quarter,
+cyclic_scs_eq_quarter, completions_card_even, Textbook.completions_even,
+Textbook.definingSet_card, Textbook.scs_eq_quarter) to an 81 MB file.
+nanoda, a type checker for Lean written separately in Rust, reported:
+  Checked 18036 declarations with no typechecker errors.
+Permitted axioms: propext, Classical.choice, Quot.sound, with any other axiom
+in the export treated as a hard error. Its one reported "pretty printer error"
+("Unable to print axioms") concerns display only.
+Control: with Classical.choice removed from the permitted list, nanoda stops
+with an error at the first declaration that uses it.
+
+STATEMENTS
+
+LatinQuarter/Textbook.lean states Theorems A and B with the definitions of
+Section 1 of arXiv:2610.18199, written without the package's own definitions:
+Latin squares with each symbol exactly once in every row and column, filled
+cells as (row, column, symbol) triples, completions counted with Nat.card,
+critical sets defined by emptying one filled cell, and scs(n) as the minimum
+of scs(L) over all Latin squares L. Audit.lean prints these definitions and
+the theorem statements.
