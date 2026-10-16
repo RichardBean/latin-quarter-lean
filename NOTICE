@@ -1,0 +1,11 @@
+The smallest critical set in a Latin square: Lean 4 formalization
+Copyright 2026 Richard Bean
+
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+This formalization and its documentation were substantially AI-generated
+with Codex under Richard Bean's direction. The mathematical manuscript was
+developed with substantial assistance from Codex and Claude. See README.md.
+
+Dependencies retain their own licences; dependency sources and compiled
+libraries are not included in this source distribution.

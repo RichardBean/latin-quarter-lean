@@ -1,0 +1,25 @@
+VERIFICATION RECORD
+Local timestamp: 2026-10-16T13:33:48+11:00
+
+Compiler: Lean 4.24.0, arm64-apple-darwin23.6.0, Release
+Compiler commit: 797c613eb9b6d4ec95db23e3e00af9ac6657f24b
+Mathlib commit: f897ebcf72cd16f89ab4577d0c826cd14afaafc7
+The mathlib working tree had no tracked changes.
+
+Command: lake build
+Result: exit status 0; Build completed successfully (7369 jobs).
+Targets: LatinQuarter, LatinQuarterStandalone, Audit.
+Full output is in verification-build.txt. Most jobs use the official mathlib
+cache; all changed project sources, the standalone source, and the audit
+were checked by the compiler.
+
+The guarded dependency audits passed for the lower bound, the cyclic
+construction, its exact size, the two scs equalities, and quarter_bound.
+Each audited theorem uses exactly the standard axioms:
+  propext, Classical.choice, Quot.sound.
+
+No sorry, admit, custom axiom, native_decide, unsafe declaration, or
+implemented_by declaration occurs in the project proof sources.
+
+SHA256SUMS.txt identifies the shipped files. Recipients should run the
+commands in README.txt to verify independently.

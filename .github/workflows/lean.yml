@@ -1,0 +1,46 @@
+name: Lean proof check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lean-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and audit the proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      LEAN_NUM_THREADS: "2"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Check standalone source matches the modules
+        run: |
+          python3 make_standalone.py
+          git diff --exit-code -- LatinQuarterStandalone.lean
+
+      - name: Install Lean and build all proof targets
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: "false"
+          build: "true"
+          build-args: "--wfail"
+          test: "false"
+          lint: "false"
+          use-mathlib-cache: "true"
+          use-github-cache: "false"
+
+      - name: Check theorem statements and axiom lists
+        run: lake env lean -DwarningAsError=true Audit.lean
+
+      - name: Check the complete standalone proof from source
+        run: lake env lean -DwarningAsError=true LatinQuarterStandalone.lean

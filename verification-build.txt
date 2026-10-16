@@ -1,0 +1,31 @@
+✔ [7356/7369] Built LatinQuarter.Rows (13s)
+✔ [7357/7369] Built LatinQuarter.Tags (14s)
+✔ [7358/7369] Built LatinQuarter.Budget (5.9s)
+✔ [7359/7369] Built LatinQuarter.Counting (5.2s)
+✔ [7360/7369] Built LatinQuarter.Shifted (5.5s)
+✔ [7361/7369] Built LatinQuarterStandalone (21s)
+✔ [7363/7369] Built LatinQuarter.CornerSize (4.4s)
+✔ [7364/7369] Built LatinQuarter.LowerBound (4.4s)
+✔ [7365/7369] Built LatinQuarter.Main (3.3s)
+✔ [7366/7369] Built LatinQuarter (3.3s)
+ℹ [7368/7369] Built Audit (4.0s)
+info: Audit.lean:3:0: def LatinQuarter.IsLatin : {n : ℕ} → LatinQuarter.Square n → Prop :=
+fun {n} L => (∀ (r : Fin n), Function.Bijective (L r)) ∧ ∀ (c : Fin n), Function.Bijective fun r => L r c
+info: Audit.lean:4:0: def LatinQuarter.IsDefining : {n : ℕ} → Finset (LatinQuarter.Cell n) → LatinQuarter.Square n → Prop :=
+fun {n} P L =>
+  LatinQuarter.IsLatin L ∧ ∀ (M : LatinQuarter.Square n), LatinQuarter.IsLatin M → LatinQuarter.Agrees P L M → M = L
+info: Audit.lean:5:0: def LatinQuarter.IsCritical : {n : ℕ} → Finset (LatinQuarter.Cell n) → LatinQuarter.Square n → Prop :=
+fun {n} P L => LatinQuarter.IsDefining P L ∧ ∀ Q ⊂ P, ¬LatinQuarter.IsDefining Q L
+info: Audit.lean:6:0: def LatinQuarter.scs : ℕ → ℕ :=
+fun n => sInf {m | ∃ L P, LatinQuarter.IsCritical P L ∧ P.card = m}
+info: Audit.lean:7:0: def LatinQuarter.scsOf : {n : ℕ} → LatinQuarter.Square n → ℕ :=
+fun {n} L => sInf {m | ∃ P, LatinQuarter.IsCritical P L ∧ P.card = m}
+info: Audit.lean:8:0: LatinQuarter.defining_set_lower_bound {n : ℕ} (P : Finset (LatinQuarter.Cell n)) (L : LatinQuarter.Square n)
+  (h : LatinQuarter.IsDefining P L) : n * n / 4 ≤ P.card
+info: Audit.lean:9:0: LatinQuarter.quarter_bound (n : ℕ) (hn : 0 < n) :
+  (∀ (L : LatinQuarter.Square n) (P : Finset (LatinQuarter.Cell n)), LatinQuarter.IsDefining P L → n * n / 4 ≤ P.card) ∧
+    LatinQuarter.IsCritical (LatinQuarter.cornerSet n) (LatinQuarter.cyclic n) ∧
+      (LatinQuarter.cornerSet n).card = n * n / 4
+info: Audit.lean:10:0: LatinQuarter.scs_eq_quarter (n : ℕ) (hn : 0 < n) : LatinQuarter.scs n = n * n / 4
+info: Audit.lean:11:0: LatinQuarter.cyclic_scs_eq_quarter (n : ℕ) (hn : 0 < n) : LatinQuarter.scsOf (LatinQuarter.cyclic n) = n * n / 4
+Build completed successfully (7369 jobs).

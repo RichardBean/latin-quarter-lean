@@ -1,0 +1,80 @@
+Publication package verification: 16 October 2026 (Australia/Sydney)
+Fresh project sources and empty local project build directory.
+Reused the previously fetched pinned dependency checkouts and mathlib cache.
+Local platform: macOS arm64. GitHub workflow has not yet run remotely.
+
+$ python3 make_standalone.py
+Generated LatinQuarterStandalone.lean
+Exit status: 0
+
+$ lake build --wfail
+✔ [7350/7367] Built LatinQuarter.SquareZero (86s)
+✔ [7351/7367] Built LatinQuarter.Minors (86s)
+✔ [7353/7369] Built LatinQuarter.Basic (80s)
+✔ [7354/7369] Built LatinQuarter.Tags (81s)
+✔ [7355/7369] Built LatinQuarter.Vanishing (101s)
+✔ [7356/7369] Built LatinQuarterStandalone (118s)
+✔ [7358/7369] Built LatinQuarter.Rows (72s)
+✔ [7359/7369] Built LatinQuarter.Cyclic (90s)
+✔ [7360/7369] Built LatinQuarter.Shifted (75s)
+✔ [7361/7369] Built LatinQuarter.Budget (75s)
+✔ [7362/7369] Built LatinQuarter.CornerSize (81s)
+✔ [7363/7369] Built LatinQuarter.Counting (82s)
+✔ [7364/7369] Built LatinQuarter.LowerBound (80s)
+✔ [7365/7369] Built LatinQuarter.Main (71s)
+✔ [7366/7369] Built LatinQuarter (17s)
+ℹ [7368/7369] Built Audit (8.1s)
+info: Audit.lean:3:0: def LatinQuarter.IsLatin : {n : ℕ} → LatinQuarter.Square n → Prop :=
+fun {n} L => (∀ (r : Fin n), Function.Bijective (L r)) ∧ ∀ (c : Fin n), Function.Bijective fun r => L r c
+info: Audit.lean:4:0: def LatinQuarter.IsDefining : {n : ℕ} → Finset (LatinQuarter.Cell n) → LatinQuarter.Square n → Prop :=
+fun {n} P L =>
+  LatinQuarter.IsLatin L ∧ ∀ (M : LatinQuarter.Square n), LatinQuarter.IsLatin M → LatinQuarter.Agrees P L M → M = L
+info: Audit.lean:5:0: def LatinQuarter.IsCritical : {n : ℕ} → Finset (LatinQuarter.Cell n) → LatinQuarter.Square n → Prop :=
+fun {n} P L => LatinQuarter.IsDefining P L ∧ ∀ Q ⊂ P, ¬LatinQuarter.IsDefining Q L
+info: Audit.lean:6:0: def LatinQuarter.scs : ℕ → ℕ :=
+fun n => sInf {m | ∃ L P, LatinQuarter.IsCritical P L ∧ P.card = m}
+info: Audit.lean:7:0: def LatinQuarter.scsOf : {n : ℕ} → LatinQuarter.Square n → ℕ :=
+fun {n} L => sInf {m | ∃ P, LatinQuarter.IsCritical P L ∧ P.card = m}
+info: Audit.lean:8:0: LatinQuarter.defining_set_lower_bound {n : ℕ} (P : Finset (LatinQuarter.Cell n)) (L : LatinQuarter.Square n)
+  (h : LatinQuarter.IsDefining P L) : n * n / 4 ≤ P.card
+info: Audit.lean:9:0: LatinQuarter.quarter_bound (n : ℕ) (hn : 0 < n) :
+  (∀ (L : LatinQuarter.Square n) (P : Finset (LatinQuarter.Cell n)), LatinQuarter.IsDefining P L → n * n / 4 ≤ P.card) ∧
+    LatinQuarter.IsCritical (LatinQuarter.cornerSet n) (LatinQuarter.cyclic n) ∧
+      (LatinQuarter.cornerSet n).card = n * n / 4
+info: Audit.lean:10:0: LatinQuarter.scs_eq_quarter (n : ℕ) (hn : 0 < n) : LatinQuarter.scs n = n * n / 4
+info: Audit.lean:11:0: LatinQuarter.cyclic_scs_eq_quarter (n : ℕ) (hn : 0 < n) : LatinQuarter.scsOf (LatinQuarter.cyclic n) = n * n / 4
+Build completed successfully (7369 jobs).
+Exit status: 0
+
+$ lake env lean -DwarningAsError=true Audit.lean
+def LatinQuarter.IsLatin : {n : ℕ} → LatinQuarter.Square n → Prop :=
+fun {n} L => (∀ (r : Fin n), Function.Bijective (L r)) ∧ ∀ (c : Fin n), Function.Bijective fun r => L r c
+def LatinQuarter.IsDefining : {n : ℕ} → Finset (LatinQuarter.Cell n) → LatinQuarter.Square n → Prop :=
+fun {n} P L =>
+  LatinQuarter.IsLatin L ∧ ∀ (M : LatinQuarter.Square n), LatinQuarter.IsLatin M → LatinQuarter.Agrees P L M → M = L
+def LatinQuarter.IsCritical : {n : ℕ} → Finset (LatinQuarter.Cell n) → LatinQuarter.Square n → Prop :=
+fun {n} P L => LatinQuarter.IsDefining P L ∧ ∀ Q ⊂ P, ¬LatinQuarter.IsDefining Q L
+def LatinQuarter.scs : ℕ → ℕ :=
+fun n => sInf {m | ∃ L P, LatinQuarter.IsCritical P L ∧ P.card = m}
+def LatinQuarter.scsOf : {n : ℕ} → LatinQuarter.Square n → ℕ :=
+fun {n} L => sInf {m | ∃ P, LatinQuarter.IsCritical P L ∧ P.card = m}
+LatinQuarter.defining_set_lower_bound {n : ℕ} (P : Finset (LatinQuarter.Cell n)) (L : LatinQuarter.Square n)
+  (h : LatinQuarter.IsDefining P L) : n * n / 4 ≤ P.card
+LatinQuarter.quarter_bound (n : ℕ) (hn : 0 < n) :
+  (∀ (L : LatinQuarter.Square n) (P : Finset (LatinQuarter.Cell n)), LatinQuarter.IsDefining P L → n * n / 4 ≤ P.card) ∧
+    LatinQuarter.IsCritical (LatinQuarter.cornerSet n) (LatinQuarter.cyclic n) ∧
+      (LatinQuarter.cornerSet n).card = n * n / 4
+LatinQuarter.scs_eq_quarter (n : ℕ) (hn : 0 < n) : LatinQuarter.scs n = n * n / 4
+LatinQuarter.cyclic_scs_eq_quarter (n : ℕ) (hn : 0 < n) : LatinQuarter.scsOf (LatinQuarter.cyclic n) = n * n / 4
+Exit status: 0
+
+$ lake env lean -DwarningAsError=true LatinQuarterStandalone.lean
+Exit status: 0
+
+Publication metadata checks
+- CITATION.cff: valid against the official Citation File Format schema, including format checks.
+- Citation version matches lakefile.toml: 0.1.0.
+- GitHub workflow: actionlint 1.7.12 passed.
+- README relative file links: all resolve.
+- All 16 Lean source files: unchanged from the original verified source ZIP.
+- GitHub-hosted execution will occur after upload; it has not been run here.

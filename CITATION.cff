@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: >-
+  Please cite this software and the accompanying paper when using the
+  formalization. Record the version or Git commit used.
+type: software
+title: "The smallest critical set in a Latin square: Lean 4 formalization"
+authors:
+  - family-names: Bean
+    given-names: Richard
+version: 0.1.0
+date-released: "2026-10-16"
+repository-code: "https://github.com/RichardBean/latin-quarter-lean"
+url: "https://github.com/RichardBean/latin-quarter-lean"
+license: Apache-2.0
+abstract: >-
+  Lean 4 formalization that, for every positive integer n, the minimum
+  size of a critical set among Latin squares of order n, and in the cyclic
+  Latin square, is floor(n squared / 4). Includes the unrestricted lower
+  bound, a cyclic corner construction, and checked axiom reports.
+  Substantially AI-generated under Richard Bean's direction; see README.md
+  for provenance and the precise scope of the formalization.
+keywords:
+  - Latin squares
+  - critical sets
+  - Lean 4
+  - formal verification
+  - combinatorics
+references:
+  - type: article
+    title: "A counting proof for the smallest critical set in a Latin square"
+    authors:
+      - family-names: Bean
+        given-names: Richard
+    year: 2026
+    journal: arXiv
+    url: "https://arxiv.org/abs/2610.18199"
+    notes: "arXiv:2610.18199 [math.CO]"
