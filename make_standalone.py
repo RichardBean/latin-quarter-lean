@@ -6,17 +6,23 @@ ROOT = Path(__file__).resolve().parent
 MODULES = [
     "Basic", "SquareZero", "Minors", "Vanishing", "Tags", "Shifted",
     "Rows", "Budget", "Counting", "LowerBound", "Cyclic", "CornerSize", "Main",
+    "Parity", "Textbook",
 ]
 HEADER = '''import Mathlib
 
 /-!
 # The smallest critical set in a Latin square: a Lean 4 proof
 
-For every positive integer n, scs(n) = scs(Z_n) = floor(n*n/4).
+Theorem A: a set of fewer than floor(n*n/4) filled cells has an even number
+of completions. Theorem B: for every positive integer n,
+scs(n) = scs(Z_n) = floor(n*n/4).
 
 Formalization prepared with Codex at Richard Bean's request, 16 October 2026.
+Version 0.2.0 adds the sections Parity (Theorem A) and Textbook (both
+theorems restated with the paper's definitions), written by Claude at
+Richard Bean's request.
 Starting manuscript: quarter_bound_counting.tex. All mathematical steps needed
-for the stated result are included below, using the general-purpose mathlib
+for the stated results are included below, using the general-purpose mathlib
 library. No manuscript theorem is taken as an assumption.
 
 Toolchain: Lean 4.24.0.
@@ -41,7 +47,9 @@ for module in MODULES:
                      if not line.startswith("import "))
     parts.append(f"\n/-! ## {module} -/\n\n{body.strip()}\n")
 parts.append("\n/-! ## Kernel dependency audit -/\n")
-for name in ["defining_set_lower_bound", "scs_eq_quarter", "cyclic_scs_eq_quarter", "quarter_bound"]:
+for name in ["defining_set_lower_bound", "scs_eq_quarter", "cyclic_scs_eq_quarter", "quarter_bound",
+             "completions_card_even", "Textbook.completions_even",
+             "Textbook.definingSet_card", "Textbook.scs_eq_quarter"]:
     parts.append(f"\n/-- info: 'LatinQuarter.{name}' depends on axioms: [propext, Classical.choice, Quot.sound] -/\n"
                  f"#guard_msgs in\n#print axioms LatinQuarter.{name}\n")
 (ROOT / "LatinQuarterStandalone.lean").write_text("".join(parts))
